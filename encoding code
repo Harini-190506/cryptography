@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+void encrypt(char* plaintext, char* ciphertext, int shiftKey) {
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        char ch = plaintext[i];
+        if (ch >= 'A' && ch <= 'Z') {
+            ciphertext[i] = 'A' + (ch - 'A' + shiftKey) % 26;
+        }
+        else if (ch >= 'a' && ch <= 'z') {
+            ciphertext[i] = 'a' + (ch - 'a' + shiftKey) % 26;
+        }
+        else {
+            ciphertext[i] = ch;
+        }
+    }
+    ciphertext[strlen(plaintext)] = '\0';
+}
+void decrypt(char* ciphertext, char* decryptedText, int shiftKey) {
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        char ch = ciphertext[i];
+        if (ch >= 'A' && ch <= 'Z') {
+            decryptedText[i] = 'A' + (ch - 'A' - shiftKey + 26) % 26;
+        }
+        else if (ch >= 'a' && ch <= 'z') {
+            decryptedText[i] = 'a' + (ch - 'a' - shiftKey + 26) % 26;
+        }
+        else {
+            decryptedText[i] = ch;
+        }
+    }
+    decryptedText[strlen(ciphertext)] = '\0';
+}
+
+int main() {
+    char plaintext[100];
+    char ciphertext[100];
+    char decryptedText[100];
+    srand(time(0));
+    int shiftKey = rand() % 25 + 1;
+    printf("Enter a message to encrypt: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+    plaintext[strcspn(plaintext, "\n")] = '\0';
+    encrypt(plaintext, ciphertext, shiftKey);
+    printf("Random Shift Key: %d\n", shiftKey);
+    printf("Encrypted Message: %s\n", ciphertext);
+    decrypt(ciphertext, decryptedText, shiftKey);
+    printf("Decrypted Message: %s\n", decryptedText);
+
+    return 0;
+}
